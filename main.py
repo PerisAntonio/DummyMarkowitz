@@ -30,10 +30,10 @@ def unsafe_func(w,rends,cov,n,risk):
 def run(input_data, solver_params, extra_arguments):
     # This is the core of your algorithm,
     # here you must return the corresponding answer.
-    cost = input_data["cost"]
-    cov = input_data["cov"]
-    current=input_data['current']   
-    rends=np.nan_to_num(np.array(input_data['rends']),nan=-1000)
+    #cost = input_data["cost"]
+    cov = input_data["covariances"]
+    #current=input_data['current']   
+    rends=np.nan_to_num(np.array(input_data['yields']),nan=-1000)
     budget=float(input_data['budget'])
     prices=np.array(input_data['prices'])
     tickers=np.array(input_data['tickers'])
@@ -42,7 +42,7 @@ def run(input_data, solver_params, extra_arguments):
     if('risk_acceptance_level' in extra_arguments):
         acceptance=extra_arguments['risk_acceptance_level']
     i=25
-    initial_vector=random_weights(len(input_data['current'])).T[0]
+    initial_vector=random_weights(len(input_data['tickers'])).T[0]
     while(i<=3200):
         options['maxiter']=i
         res = minimize(
@@ -51,7 +51,7 @@ def run(input_data, solver_params, extra_arguments):
             constraints=[
               {'type': 'eq', 'fun': lambda w: 1-np.sum(w) },
             ],
-            bounds=[(0., 2./len(input_data['current'])) for i in range(len(input_data['current']))],
+            bounds=[(0., 2./len(input_data['tickers'])) for i in range(len(input_data['tickers']))],
             method='trust-constr',
             options=options
 
